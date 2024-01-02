@@ -1,0 +1,38 @@
+# Title: Normalized Mean Difference (NMD): A Novel Filter-Based Feature Selection Method for Machine Learning
+# Author: Mohammed Mehdi Bouchene
+# Institute: Laboratoire des Télécommunications (LT), Université 8 mai 1945 – GUELMA
+# Email: bouchenemahdi@gmail.com
+# ORCID: https://orcid.org/0000-0001-6245-1243
+
+import numpy as np
+
+def NMD(X, y):
+    """
+    Compute the normalized mean difference for each feature across classes in a dataset.
+
+    Parameters:
+    X (numpy.ndarray or pandas.DataFrame): A 2D array-like object representing the feature matrix.
+    y (numpy.ndarray or pandas.Series): A 1D array-like object representing the target variable.
+
+    Returns:
+    numpy.ndarray: A 1D array containing the normalized mean difference for each feature.
+    """
+
+    # Ensure inputs are numpy arrays
+    X, y = np.asarray(X), np.asarray(y)
+
+    # Get unique classes
+    classes = np.unique(y)
+
+    # Initialize array to store the scores
+    nmd_scores = np.zeros(X.shape[1])
+
+    # Compute the normalized mean difference for each feature across classes
+    for i in range(X.shape[1]):
+        feature_values = X[:, i]
+        means = np.array([np.mean(feature_values[y == c]) for c in classes])
+        range_ = np.ptp(feature_values)
+        if range_ != 0:  # Avoid division by zero
+            nmd_scores[i] = np.ptp(means) / range_
+
+    return nmd_scores
